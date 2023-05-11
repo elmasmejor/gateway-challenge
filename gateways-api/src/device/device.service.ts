@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -47,5 +51,14 @@ export class DeviceService {
     if (!gateway) {
       throw new NotFoundException('Gateway not found');
     } else return gateway;
+  }
+
+  async canCreateDevice(gatewayId: string) {
+    try {
+      const result = await this.deviceModel.find({ gateway: gatewayId });
+      return result.length < 3;
+    } catch (e) {
+      throw new BadRequestException('error find devices on create');
+    }
   }
 }

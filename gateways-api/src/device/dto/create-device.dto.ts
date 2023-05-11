@@ -11,7 +11,7 @@ export class CreateDeviceDto {
   @ApiProperty({
     description: 'device uid',
   })
-  uid: string;
+  uid: number;
 
   @ApiProperty({
     description: 'device vendor',

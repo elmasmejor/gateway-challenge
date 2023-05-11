@@ -22,9 +22,11 @@ export class DeviceController {
     @Param('gateway') gatewayId: string,
     @Body() createDeviceDto: CreateDeviceDto,
   ) {
-    if (await this.deviceService.getGateway(gatewayId)) {
+    if (await this.deviceService.canCreateDevice(gatewayId)) {
       createDeviceDto.gateway = gatewayId;
       return this.deviceService.create(createDeviceDto);
+    } else {
+      return { message: 'this gateway has reached maximum number of devices' };
     }
   }
 
