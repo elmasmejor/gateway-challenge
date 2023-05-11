@@ -1,8 +1,16 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { DeviceService } from './device.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { UpdateDeviceDto } from './dto/update-device.dto';
-import {ApiTags} from "@nestjs/swagger";
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('/gateway/:gateway/device')
 @ApiTags('Device')
@@ -10,27 +18,44 @@ export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
   @Post()
-  create(@Body() createDeviceDto: CreateDeviceDto) {
-    return this.deviceService.create(createDeviceDto);
+  async create(
+    @Param('gateway') gatewayId: string,
+    @Body() createDeviceDto: CreateDeviceDto,
+  ) {
+    if (await this.deviceService.getGateway(gatewayId)) {
+      createDeviceDto.gateway = gatewayId;
+      return this.deviceService.create(createDeviceDto);
+    }
   }
 
   @Get()
-  findAll() {
-    return this.deviceService.findAll();
+  findAll(@Param('gateway') gatewayId: string) {
+    return this.deviceService.findAll(gatewayId);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.deviceService.findOne(+id);
+  async findOne(@Param('gateway') gatewayId: string, @Param('id') id: string) {
+    if (await this.deviceService.getGateway(gatewayId)) {
+      return this.deviceService.findOne(gatewayId, id);
+    }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDeviceDto: UpdateDeviceDto) {
-    return this.deviceService.update(+id, updateDeviceDto);
+  async update(
+    @Param('gateway') gatewayId: string,
+    @Param('id') id: string,
+    @Body() updateDeviceDto: UpdateDeviceDto,
+  ) {
+    if (await this.deviceService.getGateway(gatewayId)) {
+      updateDeviceDto.gateway = gatewayId;
+      return this.deviceService.update(gatewayId, id, updateDeviceDto);
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.deviceService.remove(+id);
+  async remove(@Param('gateway') gatewayId: string, @Param('id') id: string) {
+    if (await this.deviceService.getGateway(gatewayId)) {
+      return this.deviceService.remove(gatewayId, id);
+    }
   }
 }

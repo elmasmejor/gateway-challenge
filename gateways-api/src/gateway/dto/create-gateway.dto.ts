@@ -21,9 +21,4 @@ export class CreateGatewayDto {
     description: 'gateway ipv4 address validated',
   })
   ipv4_valid: string;
-
-  @ApiProperty({
-    description: 'device list',
-  })
-  devices: CreateDeviceDto[];
 }

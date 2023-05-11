@@ -1,6 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Optional } from '@nestjs/common';
 
 export class CreateDeviceDto {
+  @ApiProperty({
+    description: 'parent gateway',
+  })
+  @Optional()
+  gateway: string;
+
   @ApiProperty({
     description: 'device uid',
   })
