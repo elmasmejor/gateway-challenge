@@ -1,6 +1,6 @@
 <template>
   <h1>Gateways</h1>
-  <el-button class="button" text @click="showAddDialog=true">Add New</el-button>
+  <el-button class="button" text @click="addNew">Add New</el-button>
 
   <el-table :data="gateways" style="width: 100%" v-loading="loading">
     <el-table-column fixed prop="name" label="Name" width="150"/>
@@ -24,10 +24,12 @@
 
       <el-form-item label="serial number" label-width="140px">
         <el-input v-model="newGateway.serial_number" autocomplete="off"/>
+        <div v-if="newGateway.errors.ipv4" class="el-form-item__error">Check this</div>
       </el-form-item>
 
       <el-form-item label="ipv4 address" label-width="140px">
-        <el-input v-model="newGateway.ipv4" autocomplete="off"/>
+        <el-input v-validate="'ip'" data-vv-as="ip" v-model="newGateway.ipv4" autocomplete="off"/>
+        <div v-if="checkFail('ipv4')" class="el-form-item__error">Check this</div>
       </el-form-item>
 
     </el-form>
@@ -56,14 +58,23 @@ export default {
         name: '',
         serial_number: '',
         ipv4: '',
+        errors: []
       },
       dialogTitle: 'New',
       editGateway: false,
       gatewayForEdit: '',
+      submitted: false,
     }
   },
   methods: {
+    addNew() {
+      this.cleanEntity()
+      this.dialogTitle = "New";
+      this.showAddDialog = true;
+    },
     addOrEdit() {
+      this.submitted = true;
+      if (this.checkFail('ipv4')) return;
       const uri = this.editGateway ? `/gateway/${this.gatewayForEdit}` : `/gateway`;
       const method = this.editGateway ? "PATCH" : "POST";
       const message = this.editGateway ? "gateway edited" : "gateway registered";
@@ -80,7 +91,15 @@ export default {
         this.cleanEntity();
         this.showAddDialog = false;
         this.editGateway = false;
+        this.submitted = false;
+        this.newGateway.errors = [];
         this.showNotification('Info', message)
+      }).catch((err) => {
+        debugger
+        if (err.status === 409) {
+          this.newGateway.errors['ipv4'] = true;
+          this.showNotification('Error', err.data.message)
+        }
       });
     },
     view(data) {
@@ -88,6 +107,7 @@ export default {
     },
     edit(data) {
       this.editGateway = true;
+      this.dialogTitle = 'Edit';
       this.gatewayForEdit = data._id;
       this.newGateway.name = data.name;
       this.newGateway.serial_number = data.serial_number;
@@ -134,6 +154,22 @@ export default {
       this.newGateway.name = '';
       this.newGateway.serial_number = '';
       this.newGateway.ipv4 = '';
+    },
+    checkFail(component: string): boolean {
+      let componentFail = false;
+      switch (component) {
+        case 'ipv4':
+          const ipv4_regex_str = /^(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}$/gm;
+          const ipv4_regex = new RegExp(ipv4_regex_str);
+          componentFail = this.submitted && (
+              !this.newGateway.ipv4 ||
+              !ipv4_regex.test(this.newGateway.ipv4)
+          );
+          break;
+        default:
+          console.log('check not validate: ', component)
+      }
+      return componentFail
     }
   },
   mounted() {

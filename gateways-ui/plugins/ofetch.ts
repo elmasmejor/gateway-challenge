@@ -13,8 +13,8 @@ export default defineNuxtPlugin((_nuxtApp) => {
             navigateTo('/error');
         },
         onResponseError(context: FetchContext & { response: FetchResponse<ResponseType> }): Promise<void> | void {
-            console.log(context.response.status)
-            navigateTo('/error');
+            if (context.response.status > 500)
+                navigateTo('/error');
         }
     })
 })
