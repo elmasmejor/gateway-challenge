@@ -19,12 +19,9 @@ export class CreateDeviceDto {
   vendor: string;
 
   @ApiProperty({
-    description: 'device creation date',
-  })
-  creation_date: string;
-
-  @ApiProperty({
     description: 'device status: [online/offline]',
   })
   status: boolean;
+
+  date_created?: Date;
 }

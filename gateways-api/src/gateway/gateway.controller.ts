@@ -6,12 +6,12 @@ import {
   Patch,
   Param,
   Delete,
-  BadRequestException,
 } from '@nestjs/common';
 import { GatewayService } from './gateway.service';
 import { CreateGatewayDto } from './dto/create-gateway.dto';
 import { UpdateGatewayDto } from './dto/update-gateway.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Gateway } from './schemas/gateway.schema';
 
 @Controller('gateway')
 @ApiTags('Gateway')
@@ -24,12 +24,12 @@ export class GatewayController {
   }
 
   @Get()
-  findAll() {
-    return this.gatewayService.findAll();
+  async findAll(): Promise<Gateway[]> {
+    return await this.gatewayService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: string): any {
     return this.gatewayService.findOne(id);
   }
 

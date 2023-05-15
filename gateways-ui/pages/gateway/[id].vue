@@ -67,7 +67,7 @@
       </el-form>
       <template #footer>
       <span class="dialog-footer">
-        <el-button @click="showAddDialog = false">Cancel</el-button>
+        <el-button @click="closeDialog">Cancel</el-button>
         <el-button type="primary" @click="addOrEdit">Accept</el-button>
       </span>
       </template>
@@ -125,6 +125,13 @@ export default {
         method: method,
         body: this.newDevice
       }).then((res) => {
+        debugger
+        if (Object.keys(res).includes('code')) {
+          if (res.code === 409) {
+            this.showNotification('Error', res.message, true)
+          }
+          return
+        }
         if (this.editDevice) {
           const index = this.devices.findIndex((d) => d._id === res._id);
           if (index >= 0) {
@@ -190,6 +197,10 @@ export default {
       this.newDevice.status = false;
       this.newDevice.vendor = '';
       this.newDevice.uid = '';
+    },
+    closeDialog(){
+      this.cleanEntity();
+      this.showAddDialog = false;
     },
   }
 }

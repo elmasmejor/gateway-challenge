@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateDeviceDto } from '../../device/dto/create-device.dto';
 
 export class CreateGatewayDto {
   @ApiProperty({

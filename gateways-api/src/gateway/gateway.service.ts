@@ -8,11 +8,13 @@ import { UpdateGatewayDto } from './dto/update-gateway.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Gateway } from './schemas/gateway.schema';
 import { Model } from 'mongoose';
+import { Device } from '../device/schemas/device.schema';
 
 @Injectable()
 export class GatewayService {
   constructor(
     @InjectModel(Gateway.name) private readonly gatewayModel: Model<Gateway>,
+    @InjectModel(Device.name) private readonly deviceModel: Model<Device>,
   ) {}
 
   async create(createGatewayDto: CreateGatewayDto) {
@@ -27,12 +29,14 @@ export class GatewayService {
     }
   }
 
-  findAll() {
+  async findAll() {
     return this.gatewayModel.find();
   }
 
-  findOne(id: string) {
-    return this.gatewayModel.findById(id);
+  async findOne(id: string): Promise<any> {
+    const gateway = await this.gatewayModel.findById(id).lean();
+    const devices = await this.deviceModel.find({ gateway: id }).lean();
+    return { gateway, devices };
   }
 
   async update(id: string, updateGatewayDto: UpdateGatewayDto) {

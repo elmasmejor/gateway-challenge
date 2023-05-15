@@ -24,9 +24,13 @@ export class DeviceController {
   ) {
     if (await this.deviceService.canCreateDevice(gatewayId)) {
       createDeviceDto.gateway = gatewayId;
+      createDeviceDto.date_created = new Date();
       return this.deviceService.create(createDeviceDto);
     } else {
-      return { message: 'this gateway has reached maximum number of devices' };
+      return {
+        code: 409,
+        message: 'this gateway has reached maximum number of devices',
+      };
     }
   }
 

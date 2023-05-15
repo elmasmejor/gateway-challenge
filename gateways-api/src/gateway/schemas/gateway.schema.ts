@@ -1,6 +1,5 @@
 import { HydratedDocument } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Device, DeviceSchema } from '../../device/schemas/device.schema';
 
 export type GatewayDocument = HydratedDocument<Gateway>;
 @Schema()

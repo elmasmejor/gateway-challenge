@@ -22,7 +22,7 @@ export class DeviceService {
   }
 
   findAll(gatewayId: string) {
-    return this.deviceModel.find({ gateway: gatewayId });
+    return this.deviceModel.find({ gateway: gatewayId }).exec();
   }
 
   findOne(gatewayId: string, id: string) {
