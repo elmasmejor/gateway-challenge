@@ -4,6 +4,9 @@
   "description": "",
   "author": "",
   "private": true,
+  "pnpm": {
+    "useWorkspaces": true
+  },
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
