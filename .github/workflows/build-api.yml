@@ -13,9 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Move to api folder
-        run: cd ./gateways-api
-
       - name: Install Node.js
         uses: actions/setup-node@v3
 
@@ -41,7 +38,9 @@ jobs:
             ${{ runner.os }}-pnpm-store-
 
       - name: Install dependencies
-        run: pnpm install
+        run: |
+          cd gateways-api
+          pnpm install
 
       - name: Build API
         run: pnpm run build
