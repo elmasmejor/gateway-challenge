@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-node@v3
 
       - name: Move to api folder
-        run: cd gateways-api
+        run: cd gateways-challenge/gateways-api
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
