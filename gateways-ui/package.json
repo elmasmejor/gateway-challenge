@@ -1,6 +1,9 @@
 {
   "name": "nuxt-app",
   "private": true,
+  "pnpm": {
+    "useWorkspaces": true
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
