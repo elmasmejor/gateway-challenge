@@ -11,15 +11,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          path: gateways-api
+        uses: actions/checkout@v2
+
+      - name: Move to api folder
+        run: cd ./gateways-api
 
       - name: Install Node.js
         uses: actions/setup-node@v3
-
-      - name: Move to api folder
-        run: cd gateways-challenge/gateways-api
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
