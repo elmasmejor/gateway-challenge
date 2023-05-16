@@ -43,7 +43,11 @@ jobs:
           pnpm install
 
       - name: Build API
-        run: pnpm run build
+        run: |
+          cd gateways-api
+          pnpm run build
 
       - name: Run API tests
-        run: pnpm run test
+        run: |
+          cd gateways-api
+          pnpm run test
