@@ -40,6 +40,11 @@ Breve descripción de tu proyecto.
    ```bash
    pnpm run start
 
+8. optional go to swagger api documentation:
+   ```bash
+   http://localhost:3000/api
+
+
 ## Install front
 
 1. clone this:
